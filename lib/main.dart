@@ -4,13 +4,13 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+class App extends StatelessWidget {
+  const App({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return Container();
+  }
+}
       title: 'My sandwich shop',
       theme: ThemeData(
         // This is the theme of your application.
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'My Sandwich Shop'),
     );
   }
 }
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
+            const Text('welcome to my shop'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
