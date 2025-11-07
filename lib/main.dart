@@ -31,6 +31,7 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
+  String _selectedSize = 'Footlong'; // new state for sandwich size
 
   // Increase sandwich quantity (up to maxQuantity)
   void _increaseQuantity() {
@@ -63,7 +64,24 @@ class _OrderScreenState extends State<OrderScreen> {
             Center(
               child: OrderItemDisplay(
                 _quantity,
-                'Footlong',
+                _selectedSize, // reflect selected size in display
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Size selector using SegmentedButton
+            Center(
+              child: SegmentedButton<String>(
+                segments: const <ButtonSegment<String>>[
+                  ButtonSegment(value: 'Footlong', label: Text('Footlong')),
+                  ButtonSegment(value: 'Six-inch', label: Text('Six-inch')),
+                ],
+                selected: <String>{_selectedSize},
+                onSelectionChanged: (Set<String> newSelection) {
+                  setState(() {
+                    // single selection — take the first element
+                    _selectedSize = newSelection.first;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 20),
