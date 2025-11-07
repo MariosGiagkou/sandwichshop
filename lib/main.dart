@@ -48,6 +48,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool canIncrease = _quantity < widget.maxQuantity;
+    final bool canDecrease = _quantity > 0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sandwich Counter'),
@@ -76,7 +79,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         label: 'Add',
                         color: Colors.green,
                         icon: Icons.add,
-                        onPressed: _increaseQuantity,
+                        onPressed: canIncrease ? _increaseQuantity : null,
                       ),
                     ),
                   ),
@@ -88,7 +91,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         label: 'Remove',
                         color: Colors.red,
                         icon: Icons.remove,
-                        onPressed: _decreaseQuantity,
+                        onPressed: canDecrease ? _decreaseQuantity : null,
                       ),
                     ),
                   ),
@@ -119,30 +122,39 @@ class OrderItemDisplay extends StatelessWidget {
   }
 }
 
-// New reusable styled button widget
+// New reusable styled button widget (accepts nullable onPressed)
 class StyledButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color color;
   final IconData? icon;
 
   const StyledButton({
     super.key,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     required this.color,
     this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle baseStyle = ElevatedButton.styleFrom(
+      backgroundColor: color,
+      foregroundColor: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    );
+
     return ElevatedButton(
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      style: baseStyle.copyWith(
+        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+          (states) => states.contains(MaterialState.disabled) ? Colors.grey : color,
+        ),
+        foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+          (states) => states.contains(MaterialState.disabled) ? Colors.black38 : Colors.white,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
