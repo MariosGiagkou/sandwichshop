@@ -239,3 +239,18 @@ Notes to implementer
 - If persistence/push to storage is later added, follow optimistic UI update and revert on failure as described in the requirements.
 
 End of appended prompt.
+
+<!-- Appended: Drawer navigation note -->
+
+Drawer navigation (added)
+- A Drawer has been added to CartScreen to provide quick access to top-level destinations.
+- Items: Order (returns to home/root), About (navigates to /about), Profile (navigates to /sign_in).
+Acceptance checks:
+- Drawer opens from the Cart screen AppBar (hamburger) and shows listed items.
+- Tapping Order closes the drawer and returns to the app root (Order UI).
+- Tapping About opens the About screen via existing route '/about'.
+- Tapping Profile opens the Sign-in/Profile screen via '/sign_in'.
+- Drawer closes automatically on item tap.
+- No new routes were introduced; existing routes are used.
+
+End of appended Drawer note.

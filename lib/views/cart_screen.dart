@@ -5,6 +5,7 @@ import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
 import 'package:sandwich_shop/views/checkout_screen.dart';
+import 'package:sandwich_shop/views/app_drawer.dart';
 
 class CartScreen extends StatefulWidget {
   final Cart cart;
@@ -101,18 +102,25 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 100,
-            child: Image.asset('assets/images/logo.png'),
-          ),
-        ),
-        title: const Text(
-          'Cart View',
-          style: heading1,
+        // No custom leading so Flutter shows the Drawer hamburger automatically.
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: SizedBox(
+                height: 36,
+                child: Image.asset('assets/images/logo.png'),
+              ),
+            ),
+            Text(
+              'Cart View',
+              style: heading1,
+            ),
+          ],
         ),
       ),
+      // Added: app Drawer for top-level navigation
+      drawer: const AppDrawer(),
       body: Center(
         child: SingleChildScrollView(
           child: Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/views/app_drawer.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -29,6 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         title: Text('Profile / Sign in', style: heading1),
       ),
+      drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
