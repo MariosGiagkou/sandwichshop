@@ -239,6 +239,17 @@ class _OrderScreenState extends State<OrderScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
+              // Added: Profile / Sign-in link at the bottom
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Center(
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.person_outline),
+                    label: const Text('Profile / Sign in'),
+                    onPressed: () => Navigator.pushNamed(context, '/sign_in'),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
