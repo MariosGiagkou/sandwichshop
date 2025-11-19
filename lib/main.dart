@@ -52,6 +52,28 @@ class _OrderScreenState extends State<OrderScreen> {
   // Added: store confirmation message to show in UI
   String _confirmationMessage = '';
 
+  // Added: persistent cart summary state
+  int _cartItemCount = 0;
+  double _cartTotalPrice = 0.0;
+
+  // Added: simple local pricing helper (fallback / quick estimate)
+  double _priceForSandwich(Sandwich s) {
+    // base price for a six-inch sandwich by type
+    switch (s.type) {
+      case SandwichType.veggieDelight:
+        return 5.00;
+      case SandwichType.tuna:
+        return 5.50;
+      case SandwichType.ham:
+        return 6.00;
+      case SandwichType.blt:
+        return 6.50;
+      // Fallback for any other types:
+      default:
+        return 6.00;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -83,12 +105,19 @@ class _OrderScreenState extends State<OrderScreen> {
       String confirmationMessage =
           'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread to cart';
 
+      // Compute price for these items and update persistent summary state
+      final double unitPrice = _priceForSandwich(sandwich);
+      final double sizeMultiplier = _isFootlong ? 2.0 : 1.0;
+      final double lineTotal = unitPrice * sizeMultiplier * _quantity;
+
       setState(() {
         _cart.add(sandwich, quantity: _quantity);
         _confirmationMessage = confirmationMessage; // store for UI
+        _cartItemCount += _quantity;
+        _cartTotalPrice += lineTotal;
       });
 
-      // Optionally keep debug logging:
+      // Keep debug logging:
       debugPrint(confirmationMessage);
     }
   }
@@ -186,12 +215,51 @@ class _OrderScreenState extends State<OrderScreen> {
           'Sandwich Counter',
           style: heading1,
         ),
+        actions: [
+          // Added: small cart badge in the AppBar actions
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Center(
+              child: Row(
+                children: [
+                  const Icon(Icons.shopping_cart),
+                  const SizedBox(width: 6),
+                  Text(
+                    '$_cartItemCount',
+                    style: normalText,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Added: persistent cart summary card (always visible)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                child: Card(
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Cart: $_cartItemCount item(s)',
+                            style: normalText),
+                        Text('Total: \$${_cartTotalPrice.toStringAsFixed(2)}',
+                            style: heading2),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 300,
                 child: Image.asset(
