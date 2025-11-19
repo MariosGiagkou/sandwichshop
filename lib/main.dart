@@ -49,6 +49,9 @@ class _OrderScreenState extends State<OrderScreen> {
   BreadType _selectedBreadType = BreadType.white;
   int _quantity = 1;
 
+  // Added: store confirmation message to show in UI
+  String _confirmationMessage = '';
+
   @override
   void initState() {
     super.initState();
@@ -71,10 +74,6 @@ class _OrderScreenState extends State<OrderScreen> {
         breadType: _selectedBreadType,
       );
 
-      setState(() {
-        _cart.add(sandwich, quantity: _quantity);
-      });
-
       String sizeText;
       if (_isFootlong) {
         sizeText = 'footlong';
@@ -84,6 +83,12 @@ class _OrderScreenState extends State<OrderScreen> {
       String confirmationMessage =
           'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread to cart';
 
+      setState(() {
+        _cart.add(sandwich, quantity: _quantity);
+        _confirmationMessage = confirmationMessage; // store for UI
+      });
+
+      // Optionally keep debug logging:
       debugPrint(confirmationMessage);
     }
   }
@@ -255,6 +260,18 @@ class _OrderScreenState extends State<OrderScreen> {
                 label: 'Add to Cart',
                 backgroundColor: Colors.green,
               ),
+              const SizedBox(height: 20),
+
+              // Added: display confirmation message in UI when present
+              if (_confirmationMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    _confirmationMessage,
+                    style: normalText,
+                  ),
+                ),
+
               const SizedBox(height: 20),
             ],
           ),
