@@ -145,3 +145,97 @@ Users can remove items with confirmation and undo via Snackbar.
 Users can edit item options and the cart updates price and merges duplicates.
 Users can Save for later and move items back.
 Clear cart works with confirmation and undo.
+
+<!-- Appended: implementation prompt and verification checklist for "Cart item modification" feature -->
+
+Implementation prompt for "Cart item modification" (for the developer/assistant)
+Purpose
+Provide a clear, executable prompt that a developer or an assistant (like you) can use to implement the Cart item modification feature described above. The implementation must be broken into small, commit-sized subtasks and include the required acceptance criteria and tests.
+
+Instruction to implementer
+- Read this requirements document end-to-end before coding.
+- Break the work into independent subtasks (each commit-sized). Each subtask should modify only the files necessary and include tests when applicable.
+- Use setState and existing models unless a clear benefit of introducing a state-management library is required; notify if such a change is proposed.
+- Keep UI changes accessible and follow existing app styles (app_styles.dart).
+- Do not change unrelated files.
+
+Primary deliverables
+1. Increment / Decrement quantity controls on CartScreen (buttons wired to Cart model).
+2. Numeric quantity edit dialog (validation [1..kMaxQuantity]).
+3. Remove item with confirmation + Snackbar UNDO.
+4. Edit item options (reopen OrderScreen configuration with prefilled values and merge duplicates).
+5. Save-for-later list UI and move-back logic.
+6. Clear cart (AppBar/footer) with confirm + undo.
+7. Unit tests for cart logic and at least basic widget tests for +/− and remove+undo.
+
+Suggested commit-sized subtasks (implement one per commit)
+A. Enforce quantity bounds in model
+   - Files: lib/models/cart.dart
+   - Add: kMaxQuantity in a central place (or reuse existing), add setQuantity(sandwich, qty), incrementQuantity, decrementQuantity.
+   - Tests: unit tests for bounds & total recalculation.
+
+B. Add + / − buttons to cart item UI
+   - Files: lib/views/cart_screen.dart
+   - Use cart.incrementQuantity/decrementQuantity and setState; show Snackbar when max reached.
+   - Tests: widget test tapping buttons updates UI subtotal/total.
+
+C. Numeric edit dialog
+   - Files: lib/views/cart_screen.dart (or add lib/views/widgets/quantity_edit_dialog.dart)
+   - Validate integer input in [1, kMaxQuantity]; call setQuantity on confirm.
+   - Tests: dialog validation unit/widget test.
+
+D. Remove item with confirm + UNDO
+   - Files: lib/views/cart_screen.dart, lib/models/cart.dart
+   - Implement snapshot restore logic for undo (store last removed item state).
+   - Tests: unit test for undo restores counts and totals; widget test for snackbar UNDO.
+
+E. Edit item options flow
+   - Files: lib/views/order_screen.dart, lib/views/cart_screen.dart, lib/models/cart.dart
+   - Reuse OrderScreen configuration route; on confirm update cart (merge duplicates respecting kMaxQuantity).
+   - Tests: unit test for merge & capping behaviour.
+
+F. Save for later (Saved list)
+   - Files: lib/views/cart_screen.dart, lib/models/cart.dart (or new SavedRepository)
+   - Visible Saved section; MOVE BACK action re-adds items with cap.
+   - Tests: unit tests for saved list and move-back behavior.
+
+G. Clear cart with confirm + undo
+   - Files: lib/views/cart_screen.dart, lib/models/cart.dart
+   - Tests: unit test for clear + undo.
+
+Files likely to change (non-exhaustive)
+- lib/models/cart.dart
+- lib/models/sandwich.dart (if serialization or id fields required)
+- lib/views/cart_screen.dart
+- lib/views/order_screen.dart (for edit flow)
+- lib/views/widgets/quantity_edit_dialog.dart (suggested)
+- lib/views/sign_in_screen.dart (if user link placement changes)
+- test/... (unit & widget tests)
+
+Acceptance criteria (short)
+- +/− buttons change quantity and totals immediately; + disabled at max and shows Snackbar "Max quantity reached".
+- Tapping quantity opens numeric dialog; validation enforces integer in [1..kMaxQuantity].
+- Removing item shows confirm dialog; on confirm, Snackbar "Removed <name>" with UNDO restores item.
+- Editing options reuses OrderScreen config and merges duplicates; merged quantity capped at kMaxQuantity with Snackbar notice.
+- Saved-for-later moves item out of cart and allows MOVE BACK.
+- Clear cart confirmation works and UNDO restores previous cart.
+- Checkout button disabled when cart is empty.
+
+Testing requirements
+- Unit tests for model methods (setQuantity, increment, decrement, merge, total recalculation).
+- Widget tests for CartScreen: plus/minus increments, remove confirmation, UNDO behavior, numeric input validation.
+
+Verification checklist (to use before coding)
+- [ ] The prompt and subtasks are present in the requirements.md file.
+- [ ] kMaxQuantity location decided (either keep in cart.dart or move to config); update references.
+- [ ] Routes used for edit flow exist and accept prefilled arguments (OrderScreen).
+- [ ] app_styles.dart is used for new UI elements to keep visual consistency.
+- [ ] Tests to cover each subtask are listed and prepared to be added.
+
+Notes to implementer
+- Favor minimal, reversible changes per commit.
+- Use SnackBar durations long enough for user to press UNDO but not intrusive.
+- When merging duplicates, gracefully notify user if capping occurs.
+- If persistence/push to storage is later added, follow optimistic UI update and revert on failure as described in the requirements.
+
+End of appended prompt.
