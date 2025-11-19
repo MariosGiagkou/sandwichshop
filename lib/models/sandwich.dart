@@ -2,9 +2,9 @@ enum BreadType { white, wheat, wholemeal }
 
 enum SandwichType {
   veggieDelight,
-  chickenTeriyaki,
-  tunaMelt,
-  meatballMarinara,
+  ham,
+  tuna,
+  blt,
 }
 
 class Sandwich {
@@ -22,12 +22,12 @@ class Sandwich {
     switch (type) {
       case SandwichType.veggieDelight:
         return 'Veggie Delight';
-      case SandwichType.chickenTeriyaki:
-        return 'Chicken Teriyaki';
-      case SandwichType.tunaMelt:
+      case SandwichType.ham:
+        return 'Ham';
+      case SandwichType.tuna:
         return 'Tuna Melt';
-      case SandwichType.meatballMarinara:
-        return 'Meatball Marinara';
+      case SandwichType.blt:
+        return 'blt';
     }
   }
 
@@ -42,3 +42,4 @@ class Sandwich {
     return 'assets/images/${typeString}_$sizeString.png';
   }
 }
+
