@@ -69,12 +69,12 @@ void main() {
     testWidgets('changes bread type with DropdownMenu',
         (WidgetTester tester) async {
       await tester.pumpWidget(const App());
-      await tester.tap(find.byType(DropdownMenu<BreadType>));
+      await tester.tap(find.byType(DropdownMenu));
       await tester.pumpAndSettle();
       await tester.tap(find.text('wheat').last);
       await tester.pumpAndSettle();
       expect(find.textContaining('wheat footlong sandwich'), findsOneWidget);
-      await tester.tap(find.byType(DropdownMenu<BreadType>));
+      await tester.tap(find.byType(DropdownMenu));
       await tester.pumpAndSettle();
       await tester.tap(find.text('wholemeal').last);
       await tester.pumpAndSettle();

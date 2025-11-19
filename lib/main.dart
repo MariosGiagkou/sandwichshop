@@ -1,11 +1,39 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
+import 'package:sandwich_shop/models/sandwich.dart';
 import 'package:sandwich_shop/repositories/pricing_repository.dart';
 
-enum BreadType { white, wheat, wholemeal }
-
 void main() {
-  runApp(const App());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Friendly error UI for uncaught build/frame errors.
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Something went wrong')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'An unexpected error occurred:\n${details.exceptionAsString()}',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  };
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    // Keep default behavior (prints in debug) and continue.
+    FlutterError.presentError(details);
+  };
+
+  runZonedGuarded(() {
+    runApp(const App());
+  }, (error, stack) {
+    // Log uncaught asynchronous errors.
+    debugPrint('Uncaught async error: $error\n$stack');
+  });
 }
 
 class App extends StatelessWidget {
@@ -13,9 +41,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Sandwich Shop App',
-      home: OrderScreen(maxQuantity: 5),
+      // Catch exceptions thrown when creating the home widget and show a small
+      // error screen instead of letting the whole app crash.
+      home: Builder(builder: (context) {
+        try {
+          return const OrderScreen(maxQuantity: 5);
+        } catch (e, st) {
+          return ErrorScreen(error: e, stack: st);
+        }
+      }),
     );
   }
 }
@@ -32,7 +68,8 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  late final OrderRepository _orderRepository;
+  // Replaced OrderRepository with a simple local counter and logic
+  int _quantity = 0;
   final TextEditingController _notesController = TextEditingController();
   bool _isFootlong = true;
   BreadType _selectedBreadType = BreadType.white;
@@ -41,7 +78,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void initState() {
     super.initState();
-    _orderRepository = OrderRepository(maxQuantity: widget.maxQuantity);
+    // no repository to initialize
     _pricingRepository = PricingRepository();
     _notesController.addListener(() {
       setState(() {});
@@ -55,15 +92,15 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   VoidCallback? _getIncreaseCallback() {
-    if (_orderRepository.canIncrement) {
-      return () => setState(_orderRepository.increment);
+    if (_quantity < widget.maxQuantity) {
+      return () => setState(() => _quantity++);
     }
     return null;
   }
 
   VoidCallback? _getDecreaseCallback() {
-    if (_orderRepository.canDecrement) {
-      return () => setState(_orderRepository.decrement);
+    if (_quantity > 0) {
+      return () => setState(() => _quantity--);
     }
     return null;
   }
@@ -78,22 +115,21 @@ class _OrderScreenState extends State<OrderScreen> {
     }
   }
 
-  List<DropdownMenuEntry<BreadType>> _buildDropdownEntries() {
-    List<DropdownMenuEntry<BreadType>> entries = [];
-    for (BreadType bread in BreadType.values) {
-      DropdownMenuEntry<BreadType> newEntry = DropdownMenuEntry<BreadType>(
-        value: bread,
-        label: bread.name,
-      );
-      entries.add(newEntry);
-    }
-    return entries;
+  List<DropdownMenuItem<BreadType>> _buildDropdownEntries() {
+    return BreadType.values
+        .map(
+          (bread) => DropdownMenuItem<BreadType>(
+            value: bread,
+            child: Text(bread.name, style: normalText),
+          ),
+        )
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final double totalPrice = _pricingRepository.calculatePrice(
-      quantity: _orderRepository.quantity,
+      quantity: _quantity,
       isFootlong: _isFootlong,
     );
 
@@ -121,7 +157,7 @@ class _OrderScreenState extends State<OrderScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             OrderItemDisplay(
-              quantity: _orderRepository.quantity,
+              quantity: _quantity,
               itemType: sandwichType,
               breadType: _selectedBreadType,
               orderNote: noteForDisplay,
@@ -144,11 +180,10 @@ class _OrderScreenState extends State<OrderScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            DropdownMenu<BreadType>(
-              textStyle: normalText,
-              initialSelection: _selectedBreadType,
-              onSelected: _onBreadTypeSelected,
-              dropdownMenuEntries: _buildDropdownEntries(),
+            DropdownButton<BreadType>(
+              value: _selectedBreadType,
+              items: _buildDropdownEntries(),
+              onChanged: _onBreadTypeSelected,
             ),
             const SizedBox(height: 20),
             Padding(
@@ -239,8 +274,9 @@ class OrderItemDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String sandwiches = List.filled(quantity, '🥪').join();
     String displayText =
-        '$quantity ${breadType.name} $itemType sandwich(es): ${'🥪' * quantity}';
+        '$quantity ${breadType.name} $itemType sandwich(es): $sandwiches';
 
     return Column(
       children: [
@@ -254,6 +290,43 @@ class OrderItemDisplay extends StatelessWidget {
           style: normalText,
         ),
       ],
+    );
+  }
+}
+
+class ErrorScreen extends StatelessWidget {
+  final Object error;
+  final StackTrace? stack;
+
+  const ErrorScreen({super.key, required this.error, this.stack});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('App error')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'An error occurred:\n${error.toString()}',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {
+                // Try to replace the error screen with a fresh OrderScreen.
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (_) => const OrderScreen(maxQuantity: 5)),
+                );
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
