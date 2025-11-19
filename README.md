@@ -1,116 +1,133 @@
-# Sandwich Shop
+# Sandwich Shop App
 
-A Flutter application for ordering sandwiches with customizable options and quantity management.
+A simple Flutter app to simulate a sandwich counter. Users can select sandwich size (six-inch or footlong), choose a bread type, add a quantity of sandwiches, and attach notes to an order. The project includes a small repository layer and unit tests for the order repository.
 
-## Description
+## Key features
 
-This Flutter app provides a User Interface (UI) for customers to order sandwiches. Users can select sandwich size (footlong or six-inch), choose bread type, specify quantity, and add custom notes to their orders. The app also features a clean UI real-time order updates and visual feedback.
+- Choose between six-inch and footlong sandwiches
+- Select bread type (white, wheat, wholemeal)
+- Increment and decrement order quantity with limits
+- Add notes to an order
+- Basic unit tests for the OrderRepository logic
 
-### Key Features
+## Prerequisites
 
-- **Sandwich Size Selection**: Toggle between footlong and six-inch options
-- **Bread Type Selection**: Choose from white, wheat, or wholemeal bread
-- **Quantity Management**: Add/remove sandwiches with configurable maximum limits
-- **Order Notes**: Add custom instructions (e.g., "no onions")
-- **Visual Order Display**: Real-time sandwich emoji display based on quantity
-- **Responsive UI**: Clean Material Design interface with custom styling
+- OS: macOS, Windows, or Linux
+- Flutter SDK (>= stable channel)
+- Dart SDK (bundled with Flutter)
+- An IDE (VS Code, Android Studio) or a terminal for flutter commands
 
-## Installation and Setup
+Verify your environment:
 
-### Prerequisites
+```bash
+flutter --version
+```
 
-- **Flutter SDK** (>=2.17.0 <4.0.0)
-- **Git** for version control
-- **IDE**: Visual Studio Code (recommended)
+## Clone and setup
 
-### Installation Steps
+1. Clone the repository:
 
-1. **Clone the Repository**
    ```bash
-   git clone https://github.com/manighahrmani/sandwich_shop.git
-   cd sandwich_shop
+   git clone <your-repo-url> c:\Users\mario\Desktop\UNI\Programming\sandwich_shop
+   cd c:\Users\mario\Desktop\UNI\Programming\sandwich_shop
    ```
 
-2. **Install Dependencies**
+2. Install dependencies:
+
    ```bash
    flutter pub get
    ```
 
-3. **Verify Flutter Installation**
-   ```bash
-   flutter doctor
-   ```
+3. Run the app on a connected device or emulator:
 
-4. **Run the Application**
    ```bash
-   # For web (recommended)
-   flutter run -d chrome
-   
-   # For other platforms
    flutter run
    ```
 
-## Usage Instructions
+   If you want to run a specific target (e.g., Windows or Android), use:
 
-### Main Features
+   ```bash
+   flutter run -d <device-id>
+   ```
 
-1. **Selecting Sandwich Size**
-   - Use the toggle switch to choose between six-inch and footlong sandwiches
-   - The display updates automatically to show your selection
+## Usage
 
-2. **Choosing Bread Type**
-   - Select from the dropdown menu: white, wheat, or wholemeal
-   - Your choice is reflected in the order display
+- Launch the app.
+- Use the switch to toggle between six-inch and footlong.
+- Use the dropdown to pick a bread type.
+- Press "Add" or "Remove" to change the quantity (respecting the configured max).
+- Type notes in the text field; notes are shown in the order display area.
 
-3. **Managing Quantity**
-   - Click the green "Add" button to increase sandwich quantity
-   - Click the red "Remove" button to decrease quantity
-   - Maximum quantity is configurable (default: 5 sandwiches)
-   - Buttons are disabled when limits are reached
+Important flows:
 
-4. **Adding Order Notes**
-   - Use the text field to add special instructions
-   - Example: "no onions", "extra cheese", "toasted"
-   - Notes appear in the order summary
+- Quantity cannot go below 0.
+- Quantity cannot exceed the configured maxQuantity (set in the OrderScreen constructor).
+- Notes are live-updated (TextField -> controller -> display).
 
-5. **Order Display**
-   - Real-time visual representation with sandwich emojis (🥪)
-   - Shows quantity, bread type, size, and notes
-   - Updates automatically as you make changes
+Screenshots / GIFs:
 
-### Running Tests
+- Add screenshots or short GIFs of the UI here (place images inside docs/screenshots and reference them).
 
-Execute the test suite to verify functionality:
+  Example:
+
+  ![App screenshot](docs/screenshots/screenshot-1.png)
+
+## Running tests
+
+Unit tests are located in the `test` folder.
+
+Run all tests:
 
 ```bash
-# Run all tests
 flutter test
-
-# Run specific test files
-flutter test test/repositories/order_repository_test.dart
-flutter test test/views/widget_test.dart
 ```
 
-## Project Structure
+Example test in this project:
 
-```
-lib/
-├── main.dart                    # Main app entry point and UI components
-├── repositories/
-│   └── order_repository.dart    # Order state management and business logic
-└── views/
-    └── app_styles.dart         # Centralized styling and theme definitions
+- test/repositeries/order_repository_test.dart — verifies increment/decrement and bounds behavior for OrderRepository.
 
-test/
-├── repositories/
-│   └── order_repository_test.dart  # Unit tests for order logic
-└── views/
-    └── widget_test.dart            # Widget and integration tests
-```
+## Project structure
 
-### Key Files
+- lib/
+  - main.dart — main app UI and widgets (order screen, button, display).
+  - views/app_styles.dart — shared text styles used by the UI.
+  - repositeries/order_repository.dart — repository managing order quantity and limits.
+- test/
+  - repositeries/order_repository_test.dart — tests for repository logic.
 
-- **`lib/main.dart`**: Contains the main app structure, OrderScreen widget, and UI components
-- **`lib/repositories/order_repository.dart`**: Manages order state, quantity limits, and business logic
-- **`lib/views/app_styles.dart`**: Defines consistent text styles and theming
-- **`test/repositories/order_repository_test.dart`**: Unit tests for order management functionality
+Notes:
+
+- The project currently uses the folder name `lib/repositeries` (spelling: "repositeries"). If you prefer the standard spelling (`repositories`) consider renaming the folder and updating imports accordingly.
+
+## Technologies & dependencies
+
+- Flutter (UI)
+- Dart (language)
+- flutter_test for unit tests
+
+(See pubspec.yaml for full dependency list.)
+
+## Known issues & future improvements
+
+- Folder naming: `repositeries` is non-standard; renaming to `repositories` would improve clarity.
+- Persistence: Orders are not persisted; consider adding local storage or a backend.
+- Accessibility & localization enhancements.
+- Add e2e / widget tests for UI interactions.
+
+## Contributing
+
+Contributions are welcome. Suggested workflow:
+
+1. Fork the repo.
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Make changes and add tests.
+4. Submit a pull request with a clear description.
+
+Be sure to run `flutter analyze` and `flutter test` before opening a PR.
+
+## Contact
+
+Maintainer: Mario  
+Project directory: c:\Users\mario\Desktop\UNI\Programming\sandwich_shop
+
+For questions or issues, open an issue in the repository or contact the maintainer directly.
