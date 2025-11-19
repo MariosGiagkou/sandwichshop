@@ -127,6 +127,7 @@ void main() {
         itemType: 'footlong',
         breadType: BreadType.white,
         orderNote: 'No notes added.',
+        isToasted: false,
       );
       const testApp = MaterialApp(
         home: Scaffold(body: widgetToBeTested),
@@ -143,6 +144,7 @@ void main() {
         itemType: 'footlong',
         breadType: BreadType.white,
         orderNote: 'No notes added.',
+        isToasted: false,
       );
       const testApp = MaterialApp(
         home: Scaffold(body: widgetToBeTested),
@@ -160,6 +162,7 @@ void main() {
         itemType: 'six-inch',
         breadType: BreadType.wheat,
         orderNote: 'No pickles',
+        isToasted: false,
       );
       const testApp = MaterialApp(
         home: Scaffold(body: widgetToBeTested),
@@ -176,6 +179,7 @@ void main() {
         itemType: 'footlong',
         breadType: BreadType.wholemeal,
         orderNote: 'Lots of lettuce',
+        isToasted: false,
       );
       const testApp = MaterialApp(
         home: Scaffold(body: widgetToBeTested),
