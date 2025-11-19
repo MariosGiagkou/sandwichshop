@@ -34,15 +34,14 @@ void main() {
       repository.decrement(); // should not change
       expect(repository.quantity, 0);
     });
+  
+    test('description of the test', () {
+  // Arrange: set up any necessary objects or conditions
+      final object = /* create object */;
+  // Act: perform the action you want to test
+      object.someMethod();
+  // Assert: check that the expected outcome occurred
+      expect(object.someProperty, expectedValue);
+    });
   });
 }
-The tests in this file are grouped using the group function, which helps organise related tests together. Each individual test is defined using the test function. The general format of a unit test is:
-
-test('description of the test', () {
-  // Arrange: set up any necessary objects or conditions
-  final object = /* create object */;
-  // Act: perform the action you want to test
-  object.someMethod();
-  // Assert: check that the expected outcome occurred
-  expect(object.someProperty, expectedValue);
-});
