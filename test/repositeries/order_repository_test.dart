@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sandwich_shop/repositories/order_repository.dart';
+import 'package:sandwich_shop/repositeries/order_repository.dart';
 
 void main() {
   group('OrderRepository', () {
@@ -33,15 +33,6 @@ void main() {
       final repository = OrderRepository(maxQuantity: 5);
       repository.decrement(); // should not change
       expect(repository.quantity, 0);
-    });
-  
-    test('description of the test', () {
-  // Arrange: set up any necessary objects or conditions
-      final object = /* create object */;
-  // Act: perform the action you want to test
-      object.someMethod();
-  // Assert: check that the expected outcome occurred
-      expect(object.someProperty, expectedValue);
-    });
+    });;
   });
 }
