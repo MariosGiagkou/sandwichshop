@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/views/order_screen.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
+import 'package:sandwich_shop/views/common_widgets.dart';
 
 void dummyFunction() {}
 
@@ -270,14 +271,14 @@ void main() {
   group('StyledButton', () {
     testWidgets('renders correctly with icon and label when enabled',
         (WidgetTester tester) async {
-      const StyledButton testButton = StyledButton(
+      final StyledButton testButton = StyledButton(
         onPressed: dummyFunction,
         icon: Icons.add_shopping_cart,
         label: 'Test Button',
         backgroundColor: Colors.green,
       );
 
-      const MaterialApp testApp = MaterialApp(
+      final MaterialApp testApp = MaterialApp(
         home: Scaffold(body: testButton),
       );
 
@@ -294,14 +295,14 @@ void main() {
 
     testWidgets('renders correctly and is disabled when onPressed is null',
         (WidgetTester tester) async {
-      const StyledButton testButton = StyledButton(
+      final StyledButton testButton = StyledButton(
         onPressed: null,
         icon: Icons.add_shopping_cart,
         label: 'Test Button',
         backgroundColor: Colors.green,
       );
 
-      const MaterialApp testApp = MaterialApp(
+      final MaterialApp testApp = MaterialApp(
         home: Scaffold(body: testButton),
       );
 
