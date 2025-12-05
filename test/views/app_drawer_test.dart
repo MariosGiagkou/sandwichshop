@@ -7,10 +7,12 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       routes: {
-        '/about': (_) =>
-            const Scaffold(body: Center(child: Text('About Page'))),
-        '/sign_in': (_) =>
-            const Scaffold(body: Center(child: Text('Profile Page'))),
+        '/about': (_) => Scaffold(
+            appBar: AppBar(title: const Text('About')),
+            body: const Center(child: Text('About Page'))),
+        '/sign_in': (_) => Scaffold(
+            appBar: AppBar(title: const Text('Profile')),
+            body: const Center(child: Text('Profile Page'))),
       },
       home: Builder(builder: (context) {
         return Scaffold(
@@ -37,8 +39,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('About Page'), findsOneWidget);
 
-    // Go back to home
-    await tester.pageBack();
+    // Go back to home by tapping the back button in the AppBar
+    final backButton = find.byType(BackButton);
+    expect(backButton, findsOneWidget);
+    await tester.tap(backButton);
     await tester.pumpAndSettle();
 
     // Re-open drawer and tap Profile
