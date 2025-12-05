@@ -15,6 +15,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Sandwich Shop App',
+      debugShowCheckedModeBanner: false,
       home: const OrderScreen(maxQuantity: 5),
       onGenerateRoute: (settings) {
         switch (settings.name) {
