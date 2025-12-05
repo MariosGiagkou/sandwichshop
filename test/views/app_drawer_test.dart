@@ -23,7 +23,7 @@ void main() {
       }),
     ));
 
-    // Open drawer via hamburger tooltip
+    // Open drawer via tooltip
     final Finder openDrawer = find.byTooltip('Open navigation menu');
     expect(openDrawer, findsOneWidget);
     await tester.tap(openDrawer);
