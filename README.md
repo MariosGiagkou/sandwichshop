@@ -4,6 +4,30 @@ This is a simple Flutter app that allows users to order sandwiches.
 The app is built using Flutter and Dart, and it is designed primarily to be run in a web
 browser.
 
+## Recent Updates
+
+### Firebase Integration
+- **Firebase Core 3.0.0** - Added Firebase authentication and real-time database support
+- **Cloud Firestore** - User profiles (name & location) are saved to Firestore
+- **Multi-platform Support** - Firebase configured for Web, Android, iOS, macOS, and Windows
+
+### Testing & Quality Assurance
+- **Comprehensive Integration Tests** - 25+ integration tests covering all user journeys
+- **Test Coverage Documentation** - Detailed test coverage report in `INTEGRATION_TEST_COVERAGE.md`
+- **Automated Testing** - Tests for cart operations, navigation, pricing, checkout, and profile validation
+
+### Build & Performance
+- **Release Build Optimization** - 52% smaller release builds (128.86 MB → 61.47 MB)
+- **Performance Comparison** - Detailed debug vs release analysis in `BUILD_COMPARISON.md`
+- **Windows Support** - Successfully building for Windows desktop platform
+
+### Features
+- Profile screen with Firebase integration
+- Persistent order history using SQLite
+- Shopping cart with state management (Provider)
+- Multiple sandwich customization options
+- Settings persistence with SharedPreferences
+
 ## Install the essential tools
 
 1. **Terminal**:
