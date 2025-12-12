@@ -98,3 +98,56 @@ Use [the dedicated Discord channel](https://discord.com/channels/760155974467059
 to ask your questions and get help from the community.
 Please provide as much context as possible, including the error messages you are seeing and
 screenshots (you can open Discord in your web browser).
+
+## Running Tests
+
+### Integration Tests
+Run the comprehensive integration test suite:
+
+```bash
+flutter test integration_test/comprehensive_test.dart
+```
+
+For web integration tests with Chrome:
+```bash
+flutter drive --driver=test_driver/integration_test.dart --target=integration_test/comprehensive_test.dart -d chrome
+```
+
+### Unit & Widget Tests
+Run all unit and widget tests:
+
+```bash
+flutter test
+```
+
+## Building for Production
+
+### Debug Build (for development)
+```bash
+flutter build windows --debug
+```
+
+### Release Build (optimized for production)
+```bash
+flutter build windows --release
+```
+
+See `BUILD_COMPARISON.md` for detailed performance metrics and size comparisons.
+
+## Project Structure
+
+- `lib/models/` - Data models (Cart, Sandwich, SavedOrder)
+- `lib/services/` - Business logic (DatabaseService, PricingRepository)
+- `lib/views/` - UI screens (OrderScreen, CartScreen, ProfileScreen, etc.)
+- `lib/widgets/` - Reusable UI components
+- `integration_test/` - Integration test suites
+- `test/` - Unit and widget tests
+
+## Known Issues
+
+### Windows Build with Firebase
+If you encounter CMake compatibility errors when building for Windows with Firebase:
+- Firebase SDK requires CMake < 3.5 compatibility
+- Workaround: Temporarily comment out Firebase dependencies in `pubspec.yaml` for Windows builds
+- Firebase works without issues on Web, Android, iOS, and macOS platforms
+
