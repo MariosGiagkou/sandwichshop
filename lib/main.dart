@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/views/order_screen.dart';
-import 'package:sandwich_shop/views/app_styles.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AppStyles.loadFontSize();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const App());
 }
 
@@ -27,3 +30,5 @@ class App extends StatelessWidget {
     );
   }
 }
+
+// Firebase is initialized in main above.

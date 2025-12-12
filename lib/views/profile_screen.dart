@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sandwich_shop/services/database_service.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/widgets/common_widgets.dart';
@@ -22,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  void _saveProfile() {
+  Future<void> _saveProfile() async {
     final String name = _nameController.text.trim();
     final String location = _locationController.text.trim();
 
@@ -31,16 +32,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final bool bothFieldsFilled = nameIsNotEmpty && locationIsNotEmpty;
 
     if (bothFieldsFilled) {
-      _returnProfileData(name, location);
+      try {
+        final DatabaseService db = DatabaseService();
+        final String profileId = await db.saveUserProfile(
+          name: name,
+          location: location,
+        );
+        _returnProfileData(name, location, profileId);
+      } catch (e) {
+        _showError('Error saving profile: $e');
+      }
     } else {
       _showValidationError();
     }
   }
 
-  void _returnProfileData(String name, String location) {
+  void _returnProfileData(String name, String location, String profileId) {
     final Map<String, String> profileData = {
       'name': name,
       'location': location,
+      'profileId': profileId,
     };
     Navigator.pop(context, profileData);
   }
@@ -51,6 +62,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       duration: Duration(seconds: 2),
     );
     ScaffoldMessenger.of(context).showSnackBar(validationSnackBar);
+  }
+
+  void _showError(String message) {
+    final SnackBar errorSnackBar = SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 3),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
   }
 
   @override
