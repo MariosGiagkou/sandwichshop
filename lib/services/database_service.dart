@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sandwich_shop/models/saved_order.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
   static Database? _database;
   static final List<SavedOrder> _memoryOrders = <SavedOrder>[];
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -86,28 +86,28 @@ class DatabaseService {
     );
   }
 
-  // Save user profile (name & location) to Firestore.
-  // A generated profileId is used if none provided.
-  Future<String> saveUserProfile({
-    String? profileId,
-    required String name,
-    required String location,
-  }) async {
-    final String effectiveId = profileId ?? _generateProfileId(name, location);
-    final DocumentReference<Map<String, dynamic>> doc =
-        _firestore.collection('profiles').doc(effectiveId);
-    await doc.set({
-      'name': name,
-      'location': location,
-      'updatedAt': DateTime.now().toUtc().toIso8601String(),
-    }, SetOptions(merge: true));
-    return effectiveId;
-  }
+  // // Save user profile (name & location) to Firestore.
+  // // A generated profileId is used if none provided.
+  // Future<String> saveUserProfile({
+  //   String? profileId,
+  //   required String name,
+  //   required String location,
+  // }) async {
+  //   final String effectiveId = profileId ?? _generateProfileId(name, location);
+  //   final DocumentReference<Map<String, dynamic>> doc =
+  //       _firestore.collection('profiles').doc(effectiveId);
+  //   await doc.set({
+  //     'name': name,
+  //     'location': location,
+  //     'updatedAt': DateTime.now().toUtc().toIso8601String(),
+  //   }, SetOptions(merge: true));
+  //   return effectiveId;
+  // }
 
-  String _generateProfileId(String name, String location) {
-    final String base =
-        '${name.trim().toLowerCase()}_${location.trim().toLowerCase()}';
-    final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    return '${base}_$timestamp';
-  }
+  // String _generateProfileId(String name, String location) {
+  //   final String base =
+  //       '${name.trim().toLowerCase()}_${location.trim().toLowerCase()}';
+  //   final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  //   return '${base}_$timestamp';
+  // }
 }

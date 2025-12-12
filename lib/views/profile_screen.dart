@@ -32,16 +32,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final bool bothFieldsFilled = nameIsNotEmpty && locationIsNotEmpty;
 
     if (bothFieldsFilled) {
-      try {
-        final DatabaseService db = DatabaseService();
-        final String profileId = await db.saveUserProfile(
-          name: name,
-          location: location,
-        );
-        _returnProfileData(name, location, profileId);
-      } catch (e) {
-        _showError('Error saving profile: $e');
-      }
+      // Firebase functionality temporarily disabled for Windows build
+      // try {
+      //   final DatabaseService db = DatabaseService();
+      //   final String profileId = await db.saveUserProfile(
+      //     name: name,
+      //     location: location,
+      //   );
+      //   _returnProfileData(name, location, profileId);
+      // } catch (e) {
+      //   _showError('Error saving profile: $e');
+      // }
+
+      // Temporary: just return the data without Firebase
+      _returnProfileData(name, location, 'temp_profile_id');
     } else {
       _showValidationError();
     }
